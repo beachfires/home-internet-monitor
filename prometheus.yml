@@ -1,0 +1,11 @@
+scrape_configs:
+  # Scrape Prometheus itself every 5 seconds.
+  #- job_name: 'prometheus'
+  #  scrape_interval: 5s
+  #  target_groups:
+  #    - targets: ['localhost:9090'] 
+
+  - job_name: "ispmonitor"
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['telegraf:9273'] # using the telegraf container DNS name

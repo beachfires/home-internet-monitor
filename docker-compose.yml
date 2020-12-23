@@ -1,0 +1,44 @@
+# docker run --name telegraf-agent --restart always -d -p 9283:9283 -v $PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf
+
+# docker run -d --name prometheus -p 9090:9090 -v <PATH_TO_prometheus.yml_FILE>:/etc/prometheus/prometheus.yml prom/prometheus --config.file=/etc/prometheus/prometheus.yml
+
+
+version: '3.9'
+
+services:
+  telegraf:
+    image: telegraf:1.16
+    restart: always
+    ports:
+    - "9273:9273"
+    volumes:
+    - ${PWD}/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+    - proxynet
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    ports:
+    - "9090:9090"
+    command: ["--config.file=/etc/prometheus/prometheus.yml"] # , "--storage.local.path=/prometheus", "--storage.local.memory-chunks=10000"]
+    volumes:
+    - ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+    - proxynet
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+    - "3000:3000"
+    volumes:
+    - ${PWD}/datasource.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+    - ${PWD}/Network-Up-Dashboard.json:/etc/grafana/provisioning/dashboards/Network-Up-Dashboard.json:ro
+    networks:
+    - proxynet
+
+networks:
+  proxynet:
+    name: custom_network
+
