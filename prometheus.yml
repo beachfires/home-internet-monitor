@@ -6,6 +6,6 @@ scrape_configs:
   #    - targets: ['localhost:9090'] 
 
   - job_name: "ispmonitor"
-    scrape_interval: 1s
+    scrape_interval: 5s
     static_configs:
       - targets: ['telegraf:9273'] # using the telegraf container DNS name
